@@ -9,21 +9,21 @@ module game {
         private static mInited: boolean = false;
         private static mHtmlDivElement: Laya.HTMLDivElement;
         // 用于裁剪和滚动的面板
-        private static _panel: Laya.Panel;
+        private static mPanel: Laya.Panel;
         // 尺寸大小
-        private static readonly _size: Laya.Vector2 = new Laya.Vector2(300, 300);
+        private static readonly mSize: Laya.Vector2 = new Laya.Vector2(300, 300);
         // 默认字体
-        private static readonly _defaultFont: string = "Arial";
+        private static readonly mDefaultFont: string = "Arial";
         // 默认字体大小
-        private static readonly _defaultFontSize: number = 24;
+        private static readonly mDefaultFontSize: number = 24;
         // 默认字体颜色
-        private static readonly _defaultFontColor: string = "#ffffff";
+        private static readonly mDefaultFontColor: string = "#ffffff";
         // 默认行间距
-        private static readonly _defaultLeading: number = 10;
+        private static readonly mDefaultLeading: number = 10;
 
-        private static _blackFilter: Laya.ColorFilter;
+        private static mBlackFilter: Laya.ColorFilter;
 
-        private static _contents: string = "";
+        private static mContents: string = "";
 
         private constructor() {
 
@@ -35,8 +35,8 @@ module game {
          * @param posY 
          */
         public static show(posX: number = 0, posY: number = 0, width: number = 300, height: number = 300) {
-            DebugPanel._size.x = width;
-            DebugPanel._size.y = height;
+            DebugPanel.mSize.x = width;
+            DebugPanel.mSize.y = height;
 
             DebugPanel.init();
             DebugPanel.mDebugPanelRoot.pos(posX, posY);
@@ -60,7 +60,7 @@ module game {
             // DebugPanel._htmlDivElement.appendHTML(str);
             DebugPanel.updatePanel();
 
-            DebugPanel._contents += str;
+            DebugPanel.mContents += str;
         }
 
         private static init() {
@@ -71,15 +71,15 @@ module game {
             DebugPanel.mInited = true;
 
             DebugPanel.mDebugPanelRoot = new Laya.Sprite();
-            DebugPanel.mDebugPanelRoot.width = DebugPanel._size.x;
-            DebugPanel.mDebugPanelRoot.height = DebugPanel._size.y;
+            DebugPanel.mDebugPanelRoot.width = DebugPanel.mSize.x;
+            DebugPanel.mDebugPanelRoot.height = DebugPanel.mSize.y;
             DebugPanel.mDebugPanelRoot.zOrder = 99999;
             LayerManager.getInstance().alertLayer.addChild(DebugPanel.mDebugPanelRoot);
 
             DebugPanel.mMask = new Laya.Sprite();
-            DebugPanel.mMask.graphics.drawRect(0, 0, DebugPanel._size.x, DebugPanel._size.y, "#000000");
-            DebugPanel.mMask.width = DebugPanel._size.x;
-            DebugPanel.mMask.height = DebugPanel._size.y;
+            DebugPanel.mMask.graphics.drawRect(0, 0, DebugPanel.mSize.x, DebugPanel.mSize.y, "#000000");
+            DebugPanel.mMask.width = DebugPanel.mSize.x;
+            DebugPanel.mMask.height = DebugPanel.mSize.y;
             DebugPanel.mDebugPanelRoot.addChild(DebugPanel.mMask);
             let colorMatrix = [
                 0, 0, 0, 0, 0,  		// R
@@ -88,61 +88,61 @@ module game {
                 0, 0, 0, 0.5, 0, 		// A
             ];
             // 黑色滤镜
-            DebugPanel._blackFilter = new Laya.ColorFilter(colorMatrix);
-            DebugPanel.mMask.filters = [DebugPanel._blackFilter];
+            DebugPanel.mBlackFilter = new Laya.ColorFilter(colorMatrix);
+            DebugPanel.mMask.filters = [DebugPanel.mBlackFilter];
 
             DebugPanel.mHtmlDivElement = new Laya.HTMLDivElement();
 
             // 裁剪面板
-            DebugPanel._panel = new Laya.Panel();
-            DebugPanel._panel.size(DebugPanel._size.x, DebugPanel._size.y);
-            DebugPanel._panel.vScrollBarSkin = "";	// 这里故意设置一个不存在的图片（不显示滚动条）
-            DebugPanel.mDebugPanelRoot.addChild(DebugPanel._panel);
+            DebugPanel.mPanel = new Laya.Panel();
+            DebugPanel.mPanel.size(DebugPanel.mSize.x, DebugPanel.mSize.y);
+            DebugPanel.mPanel.vScrollBarSkin = "";	// 这里故意设置一个不存在的图片（不显示滚动条）
+            DebugPanel.mDebugPanelRoot.addChild(DebugPanel.mPanel);
 
             // 设置富文本
-            DebugPanel.mHtmlDivElement.size(DebugPanel._size.x, DebugPanel._size.y);
+            DebugPanel.mHtmlDivElement.size(DebugPanel.mSize.x, DebugPanel.mSize.y);
             DebugPanel.mHtmlDivElement.pos(0, 0);
-            DebugPanel._panel.addChild(DebugPanel.mHtmlDivElement);
+            DebugPanel.mPanel.addChild(DebugPanel.mHtmlDivElement);
 
             // 设置默认的字体大小及颜色
-            DebugPanel.mHtmlDivElement.style.font = DebugPanel._defaultFont;
-            DebugPanel.mHtmlDivElement.style.fontSize = DebugPanel._defaultFontSize;
-            DebugPanel.mHtmlDivElement.style.color = DebugPanel._defaultFontColor;
-            DebugPanel.mHtmlDivElement.style.leading = DebugPanel._defaultLeading;
+            DebugPanel.mHtmlDivElement.style.font = DebugPanel.mDefaultFont;
+            DebugPanel.mHtmlDivElement.style.fontSize = DebugPanel.mDefaultFontSize;
+            DebugPanel.mHtmlDivElement.style.color = DebugPanel.mDefaultFontColor;
+            DebugPanel.mHtmlDivElement.style.leading = DebugPanel.mDefaultLeading;
         }
 
         // 刷新滚动内容
         private static updatePanel() {
             // 刷新滚动内容
-            DebugPanel._panel.refresh();
+            DebugPanel.mPanel.refresh();
             // 滚动至最新的一行
-            DebugPanel._panel.vScrollBar.value = DebugPanel.mHtmlDivElement.contextHeight - DebugPanel._size.y;
+            DebugPanel.mPanel.vScrollBar.value = DebugPanel.mHtmlDivElement.contextHeight - DebugPanel.mSize.y;
         }
 
         private static setSize(width: number, height: number) {
-            DebugPanel._size.x = width;
-            DebugPanel._size.y = height;
+            DebugPanel.mSize.x = width;
+            DebugPanel.mSize.y = height;
 
             if (DebugPanel.mDebugPanelRoot) {
-                DebugPanel.mDebugPanelRoot.width = DebugPanel._size.x;
-                DebugPanel.mDebugPanelRoot.height = DebugPanel._size.y;
+                DebugPanel.mDebugPanelRoot.width = DebugPanel.mSize.x;
+                DebugPanel.mDebugPanelRoot.height = DebugPanel.mSize.y;
             }
 
             if (DebugPanel.mMask) {
                 DebugPanel.mMask.graphics.clear();
-                DebugPanel.mMask.graphics.drawRect(0, 0, DebugPanel._size.x, DebugPanel._size.y, "#000000");
-                DebugPanel.mMask.width = DebugPanel._size.x;
-                DebugPanel.mMask.height = DebugPanel._size.y;
-                DebugPanel.mMask.filters = [DebugPanel._blackFilter];
+                DebugPanel.mMask.graphics.drawRect(0, 0, DebugPanel.mSize.x, DebugPanel.mSize.y, "#000000");
+                DebugPanel.mMask.width = DebugPanel.mSize.x;
+                DebugPanel.mMask.height = DebugPanel.mSize.y;
+                DebugPanel.mMask.filters = [DebugPanel.mBlackFilter];
             }
 
-            if (DebugPanel._panel) {
-                DebugPanel._panel.size(DebugPanel._size.x, DebugPanel._size.y);
+            if (DebugPanel.mPanel) {
+                DebugPanel.mPanel.size(DebugPanel.mSize.x, DebugPanel.mSize.y);
             }
 
             if (DebugPanel.mHtmlDivElement) {
-                DebugPanel.mHtmlDivElement.size(DebugPanel._size.x, DebugPanel._size.y);
-                DebugPanel.mHtmlDivElement.innerHTML = DebugPanel._contents;
+                DebugPanel.mHtmlDivElement.size(DebugPanel.mSize.x, DebugPanel.mSize.y);
+                DebugPanel.mHtmlDivElement.innerHTML = DebugPanel.mContents;
             }
 
             DebugPanel.updatePanel();

@@ -14,12 +14,12 @@ module game {
     }
 
     export class PhysicsManager {
-        private static _instance: PhysicsManager = null;
+        private static mInstance: PhysicsManager = null;
         public static getInstance() {
-            if (PhysicsManager._instance == null) {
-                PhysicsManager._instance = new PhysicsManager();
+            if (PhysicsManager.mInstance == null) {
+                PhysicsManager.mInstance = new PhysicsManager();
             }
-            return PhysicsManager._instance;
+            return PhysicsManager.mInstance;
         }
         /**是否初始化物理引擎 */
         private mInited: boolean = false;

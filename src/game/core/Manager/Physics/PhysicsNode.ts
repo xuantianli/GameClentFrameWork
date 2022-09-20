@@ -19,32 +19,32 @@ module game {
 		/**物理引擎管理类*/
 		private mPhysicMgr: PhysicsManager = null;
 		/**刚体*/
-		private _body: any = null;
-		private _addedToPhysicsWorld: boolean = false;
+		private mBody: any = null;
+		private mAddedToPhysicsWorld: boolean = false;
 
-		private _bodyPos: GPoint = { x: 0, y: 0 }; P
-		private _bodyRotation: number = 0;
+		private mBodyPos: GPoint = { x: 0, y: 0 }; P
+		private mBodyRotation: number = 0;
 
 		// 绘制碰撞边缘
-		private _wireframe: Laya.Sprite;
+		private mWireframe: Laya.Sprite;
 		m
 		// 形状
-		private _shape: PhysicsShape;
+		private mShape: PhysicsShape;
 		// 形状数据
-		private _shapeData: any[];
+		private mShapeData: any[];
 
 		// 碰撞group
-		private _collisionGroup: number = 0;
+		private mCollisionGroup: number = 0;
 		// 碰撞category
-		private _collisionCategory: number = 0x0001;
+		private mCollisionCategory: number = 0x0001;
 		// 碰撞mask
-		private _collisionMask: number = 0xFFFFFFFF;
+		private mCollisionMask: number = 0xFFFFFFFF;
 
 		// 用于调试的标签
-		private _debugTag: string = "";
-		private _debugLabel: Laya.Label = null;
+		private mDebugTag: string = "";
+		private mDebugLabel: Laya.Label = null;
 
-		protected _uiRootSprite: Laya.Sprite;
+		protected mUiRootSprite: Laya.Sprite;
 
 		constructor(shape: PhysicsShape, shapeData: any[]) {
 			super();
@@ -57,57 +57,57 @@ module game {
 		}
 
 		protected onAdded() {
-			if (!this._addedToPhysicsWorld) {
-				this._addedToPhysicsWorld = true;
+			if (!this.mAddedToPhysicsWorld) {
+				this.mAddedToPhysicsWorld = true;
 
-				this.mPhysicMgr.addBody(this._body);
+				this.mPhysicMgr.addBody(this.mBody);
 
-				this._bodyPos.x = this.posX;
-				this._bodyPos.y = this.posY;
-				this.mMatter.Body.setPosition(this._body, this._bodyPos);
+				this.mBodyPos.x = this.posX;
+				this.mBodyPos.y = this.posY;
+				this.mMatter.Body.setPosition(this.mBody, this.mBodyPos);
 
 				this['initialAngle'] = this.rotation;
 			}
 		}
 
 		protected removeBody() {
-			this.mPhysicMgr.remove(this._body);
+			this.mPhysicMgr.remove(this.mBody);
 		}
 
 		public destroy() {
-			this.mPhysicMgr.remove(this._body);
+			this.mPhysicMgr.remove(this.mBody);
 			super.destroy();
 		}
 
 		set collisionGroup(g: number) {
-			this._body.collisionFilter.group = g;
-			this._collisionGroup = g;
+			this.mBody.collisionFilter.group = g;
+			this.mCollisionGroup = g;
 		}
 
 		get collisionGroup() {
-			return this._collisionGroup;
+			return this.mCollisionGroup;
 		}
 
 		set collisionCategory(c: number) {
-			this._body.collisionFilter.category = c;
-			this._collisionCategory = c;
+			this.mBody.collisionFilter.category = c;
+			this.mCollisionCategory = c;
 		}
 
 		get collisionCategory() {
-			return this._collisionCategory;
+			return this.mCollisionCategory;
 		}
 
 		set collisionMask(m: number) {
-			this._body.collisionFilter.mask = m;
-			this._collisionMask = m;
+			this.mBody.collisionFilter.mask = m;
+			this.mCollisionMask = m;
 		}
 
 		get collisionMask() {
-			return this._collisionMask;
+			return this.mCollisionMask;
 		}
 
 		set debugTag(v: string) {
-			this._debugTag = v;
+			this.mDebugTag = v;
 			this.updateDebugLabel();
 		}
 
@@ -115,62 +115,62 @@ module game {
 		public showWireframe(show: boolean) {
 			if (show) {
 				this._drawWireframe();
-				if (this._debugLabel) {
-					this._debugLabel.visible = true;
+				if (this.mDebugLabel) {
+					this.mDebugLabel.visible = true;
 				}
 			} else {
-				this._wireframe.graphics.clear();
-				if (this._debugLabel) {
-					this._debugLabel.visible = false;
+				this.mWireframe.graphics.clear();
+				if (this.mDebugLabel) {
+					this.mDebugLabel.visible = false;
 				}
 			}
 		}
 
 		// 绘制碰撞边缘
 		private _drawWireframe() {
-			this._wireframe.graphics.clear();
+			this.mWireframe.graphics.clear();
 
-			switch (this._shape) {
+			switch (this.mShape) {
 				case PhysicsShape.Circle: {
-					let [x, y, radius] = this._shapeData;
+					let [x, y, radius] = this.mShapeData;
 					if (this.mPhysicMgr.drawWireframes) {
-						this._wireframe.graphics.drawCircle(x, y, radius, null, "#ff0000", 2);
-						this._wireframe.graphics.drawLine(x, y, x, y - radius, "#ffff00", 2);
+						this.mWireframe.graphics.drawCircle(x, y, radius, null, "#ff0000", 2);
+						this.mWireframe.graphics.drawLine(x, y, x, y - radius, "#ffff00", 2);
 					}
 					break;
 				}
 				case PhysicsShape.Rectangle: {
-					let [x, y, width, height] = this._shapeData;
+					let [x, y, width, height] = this.mShapeData;
 					if (this.mPhysicMgr.drawWireframes) {
-						this._wireframe.graphics.drawRect(x, y, width, height, null, "#ff0000", 2);
-						this._wireframe.graphics.drawLine(x + width / 2, y + height / 2, x + width / 2, y, "#ffff00", 2);
+						this.mWireframe.graphics.drawRect(x, y, width, height, null, "#ff0000", 2);
+						this.mWireframe.graphics.drawLine(x + width / 2, y + height / 2, x + width / 2, y, "#ffff00", 2);
 					}
 					break;
 				}
 				case PhysicsShape.RegularPolygon: {
-					let [x, y, sides, radius] = this._shapeData;
+					let [x, y, sides, radius] = this.mShapeData;
 					if (this.mPhysicMgr.drawWireframes) {
 						let drawPoints = [];
-						for (let v in this._body.vertices) {
-							let pos = this._body.vertices[v];
+						for (let v in this.mBody.vertices) {
+							let pos = this.mBody.vertices[v];
 							drawPoints.push(pos.x, pos.y);
 						}
-						this._wireframe.graphics.drawPoly(0, 0, drawPoints, null, "#ff0000", 2);
+						this.mWireframe.graphics.drawPoly(0, 0, drawPoints, null, "#ff0000", 2);
 					}
 					break;
 				}
 				case PhysicsShape.Polygon: {
 					let points: GPoint[] = [];
-					for (let i = 0; i < this._shapeData.length; i += 2) {
-						points.push({ x: this._shapeData[i], y: this._shapeData[i + 1] });
+					for (let i = 0; i < this.mShapeData.length; i += 2) {
+						points.push({ x: this.mShapeData[i], y: this.mShapeData[i + 1] });
 					}
 					if (this.mPhysicMgr.drawWireframes) {
 						let drawPoints = [];
-						for (let v in this._body.vertices) {
-							let pos = this._body.vertices[v];
+						for (let v in this.mBody.vertices) {
+							let pos = this.mBody.vertices[v];
 							drawPoints.push(pos.x, pos.y);
 						}
-						this._wireframe.graphics.drawPoly(0, 0, drawPoints, null, "#ff0000", 2);
+						this.mWireframe.graphics.drawPoly(0, 0, drawPoints, null, "#ff0000", 2);
 					}
 					break;
 				}
@@ -180,28 +180,28 @@ module game {
 		}
 
 		private updateDebugLabel() {
-			if (!this._debugLabel) {
-				this._debugLabel = new Laya.Label();
-				this._debugLabel.text = this._debugTag;
-				this._debugLabel.align = "center";
-				this._debugLabel.fontSize = 30;
-				this._debugLabel.color = "#ffffff";
-				this._debugLabel.stroke = 5;
-				this._debugLabel.strokeColor = "#000000";
-				this._wireframe.addChild(this._debugLabel);
+			if (!this.mDebugLabel) {
+				this.mDebugLabel = new Laya.Label();
+				this.mDebugLabel.text = this.mDebugTag;
+				this.mDebugLabel.align = "center";
+				this.mDebugLabel.fontSize = 30;
+				this.mDebugLabel.color = "#ffffff";
+				this.mDebugLabel.stroke = 5;
+				this.mDebugLabel.strokeColor = "#000000";
+				this.mWireframe.addChild(this.mDebugLabel);
 			}
 
-			this._debugLabel.text = this._debugTag;
+			this.mDebugLabel.text = this.mDebugTag;
 
-			this._debugLabel.visible = this.mPhysicMgr.drawWireframes;
+			this.mDebugLabel.visible = this.mPhysicMgr.drawWireframes;
 		}
 
 		private initPhysicsComponent(shape: PhysicsShape, shapeData: any[]) {
 			this.mPhysicMgr = PhysicsManager.getInstance();
 
 			// 保存形状及数据
-			this._shape = shape;
-			this._shapeData = shapeData;
+			this.mShape = shape;
+			this.mShapeData = shapeData;
 
 			// 创建body
 			let bodyOptions = {
@@ -214,7 +214,7 @@ module game {
 						throw Error("圆形数据异常");
 					}
 					let [x, y, radius] = shapeData;
-					this._body = this.mPhysicMgr.createBodyCircle(x, y, radius, bodyOptions);
+					this.mBody = this.mPhysicMgr.createBodyCircle(x, y, radius, bodyOptions);
 					break;
 				}
 				case PhysicsShape.Rectangle: {
@@ -222,7 +222,7 @@ module game {
 						throw Error("矩形数据异常");
 					}
 					let [x, y, width, height] = shapeData;
-					this._body = this.mPhysicMgr.createBodyRectangle(x, y, width, height, bodyOptions);
+					this.mBody = this.mPhysicMgr.createBodyRectangle(x, y, width, height, bodyOptions);
 					break;
 				}
 				case PhysicsShape.RegularPolygon: {
@@ -230,7 +230,7 @@ module game {
 						throw Error("正多边形数据异常");
 					}
 					let [x, y, sides, radius] = shapeData;
-					this._body = this.mPhysicMgr.createBodyRegularPolygon(x, y, sides, radius, bodyOptions);
+					this.mBody = this.mPhysicMgr.createBodyRegularPolygon(x, y, sides, radius, bodyOptions);
 					break;
 				}
 				case PhysicsShape.Polygon: {
@@ -242,25 +242,25 @@ module game {
 					for (let i = 0; i < shapeData.length; i += 2) {
 						points.push({ x: shapeData[i], y: shapeData[i + 1] });
 					}
-					this._body = this.mPhysicMgr.createBodyFromVertices(points, bodyOptions);
+					this.mBody = this.mPhysicMgr.createBodyFromVertices(points, bodyOptions);
 					break;
 				}
 			}
 
 			// 绘制碰撞边缘
-			this._wireframe = new Sprite();
-			this._wireframe.zOrder = 10000;
-			this.addChild(this._wireframe);
+			this.mWireframe = new Sprite();
+			this.mWireframe.zOrder = 10000;
+			this.addChild(this.mWireframe);
 			this._drawWireframe();
 
 			// 绑定LayaSprite到matter的body
-			this._body.layaSprite = this;
+			this.mBody.layaSprite = this;
 		}
 
 		private initUISprite() {
-			this._uiRootSprite = new Laya.Sprite();
-			this._uiRootSprite.zOrder = 10001;
-			this.addChild(this._uiRootSprite);
+			this.mUiRootSprite = new Laya.Sprite();
+			this.mUiRootSprite.zOrder = 10001;
+			this.addChild(this.mUiRootSprite);
 		}
 
 		onCollisionStart(other: any) {
@@ -278,35 +278,35 @@ module game {
 		}
 
 		set posX(x: number) {
-			this._bodyPos.x = x;
-			this.mMatter.Body.setPosition(this._body, this._bodyPos);
+			this.mBodyPos.x = x;
+			this.mMatter.Body.setPosition(this.mBody, this.mBodyPos);
 		}
 
 		set posY(y: number) {
-			this._bodyPos.y = y;
-			this.mMatter.Body.setPosition(this._body, this._bodyPos);
+			this.mBodyPos.y = y;
+			this.mMatter.Body.setPosition(this.mBody, this.mBodyPos);
 		}
 
 		get posX(): number {
-			return this._bodyPos.x;
+			return this.mBodyPos.x;
 		}
 
 		get posY(): number {
-			return this._bodyPos.y;
+			return this.mBodyPos.y;
 		}
 
 		public setAngle(ang: number) {
-			this._bodyRotation = ang;
+			this.mBodyRotation = ang;
 			// this.mMatter.Body.setAngle(this._body, Angle2Radian(ang));
 
-			this._uiRootSprite.rotation = -ang;
-			if (this._debugLabel) {
-				this._debugLabel.rotation = -ang;
+			this.mUiRootSprite.rotation = -ang;
+			if (this.mDebugLabel) {
+				this.mDebugLabel.rotation = -ang;
 			}
 		}
 
 		public getAngle(): number {
-			return this._bodyRotation;
+			return this.mBodyRotation;
 		}
 	}
 }
